@@ -1,0 +1,17 @@
+# Start LED status python script in home folder
+# https://www.raspberrypi-spy.co.uk/2015/10/how-to-autorun-a-python-script-on-boot-using-systemd/
+# sudo cp status_LED.service /lib/systemd/system/status_LED.service
+
+# Check status of service
+# sudo systemctl status status_LED.service
+
+[Unit]
+Description=TTN status check with LED indication
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /home/pi/TTN/status_LED.py
+
+[Install]
+WantedBy=multi-user.target
