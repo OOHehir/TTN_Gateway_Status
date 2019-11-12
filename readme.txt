@@ -1,4 +1,4 @@
-The Thing Network Gateway Status Script
+The Things Network Gateway Status Script
 
 
 
