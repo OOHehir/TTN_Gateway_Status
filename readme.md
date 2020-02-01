@@ -6,3 +6,13 @@ Depending on the result it sets LED's to indicate the Gateway status
 
 # Installation:
 Install the .py file in your home folder & follow the instructions on the .service file to get it running
+
+# Changelog
+9th Nov '20
+Initial version
+
+19th Dec '19
+Added command to restart gateway
+
+1st Feb '20
+Reduced timeout to 3min
