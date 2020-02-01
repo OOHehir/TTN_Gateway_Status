@@ -1,17 +1,21 @@
 #!/usr/bin/python3
-
-#
-#
-# 9th Nov '19
 #
 # A simple python script to poll the status of a gateway & set LED's appropiately
 # Uses the TTN url combined with the gateway ID
+#
+# 9th Nov '20
+# Initial version
+#
+# 19th Dec '19
+# Added command to restart gateway
+#
+# 1st Feb '20
+# Reduced timeout to 3min
 #
 # Note: required modules:
 # sudo apt-get install rpi.gpio
 #
 # Must be run as sudo (to control pins)
-#
 #
 
 import RPi.GPIO as GPIO
@@ -19,15 +23,19 @@ import time
 import json
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
+import os   # For gateway restart
 
 #Define LED's
 red_LED = 23
 green_LED = 24
 
 #Enter the gateway to monitor below
-baseURL = 'http://noc.thethingsnetwork.org:8085/api/v2/gateways/eui-b827ebfffe87bd11'
-gateway_timeout = 5 * 60    # Presume gateway not connected if this time exceeded
+baseURL = 'http://noc.thethingsnetwork.org:8085/api/v2/gateways/eui-b827ebfffebd993f'
+gateway_timeout = 3 * 60    # Presume gateway not connected if this time exceeded
 gateway_status = 0          # up = 1, down = 2, dont_know = 3
+
+#Command to restart gateway service
+gateway_restart_cmd = 'sudo service ttn-gateway restart'
 
 # How long to wait (in seconds) between checks (at least 30 sec?)
 FREQUENCY_SECONDS = 90
@@ -58,10 +66,8 @@ while True:
         data = json.loads(response.read().decode("utf-8"))
         # Convert time to number & convert to seconds
         gateway_time = int(data['time']) / 1000000000
-        print(gateway_time)
         tn = time.time()
-        print(tn)
-        print (tn - gateway_time)
+        print ('Seconds since last update:', tn - gateway_time)
         if ((tn - gateway_time) < gateway_timeout):
             gateway_status = 1
         else:
@@ -77,6 +83,10 @@ while True:
         # Down
         print ('Gateway down')
         GPIO.output(green_LED,GPIO.LOW)
+
+        # Try restarting gateway service
+        os.system(gateway_restart_cmd)
+
         # Flash red LED
         for n in range(0,(FREQUENCY_SECONDS * 2) ):
             GPIO.output(red_LED,GPIO.HIGH)
