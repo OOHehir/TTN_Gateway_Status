@@ -1,5 +1,7 @@
 # The Things Network Gateway Status Script
 
+OBSOLETE - URL discontinued in latest TTN Stack
+
 This project is run on a Raspberry Pi with a RAK 7243.
 It runs a python 3 script to perodically poll the TTN URL (http://noc.thethingsnetwork.org:8085/api/v2/gateways/eui-b827ebfffe87bd11) to check when the gateway was last seen.
 Depending on the result it sets LED's to indicate the Gateway status
